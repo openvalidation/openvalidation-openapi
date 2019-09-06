@@ -1,0 +1,42 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Life Contract changes
+  license:
+    name: Apache 2.0
+  description: |
+    change requests for life contracts.
+servers:
+  - url: http://rnextshowcase.westeurope.azurecontainer.io
+paths:
+  /life/contract:
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FundChangeData'
+      responses:
+        '200':
+          description: success
+components:
+  schemas:
+    FundChangeData:
+      type: object
+      properties:
+        product:
+          type: string
+        portfolio:
+          type: object
+          properties:
+            name:
+              type: string
+            shares:
+              type: array
+              items:
+                $ref: '#/components/schemas/PortfolioShare'
+    PortfolioShare:
+      type: object
+      properties:
+        percentage:
+          type: integer

@@ -1,0 +1,181 @@
+openapi: "3.0.0"
+info:
+  title: Sample
+  version: "1.0"
+paths:
+  /simple:
+    post:
+      requestBody:
+        content:
+          application/json:
+            x-ov-rules:
+              name: Simple
+              culture: en
+              rule: |
+                WENN der name IST GLEICH Hallo ich war hier
+                DANN was für ein Quatsch!
+            schema:
+              $ref: '#/components/schemas/Simple'
+      responses:
+        '200':
+          description: response
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: number
+  /oneof:
+    post:
+      requestBody:
+        content:
+          application/json:
+            x-ov-rules:
+              $ref: '#/x-ov-rules/ReferencedRule'
+            schema:
+              $ref: '#/components/schemas/WithOneOf'
+      responses:
+        '200':
+          description: response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithAllOf'
+  /allof:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithAllOfB'
+      responses:
+        '200':
+          description: response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithAllOf'
+  /anyof:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithAnyOf'
+      responses:
+        '200':
+          description: response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithAllOf'
+  /recursive:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithRecursive'
+      responses:
+        '200':
+          description: response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithAllOf'
+
+  /duplicates:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Duplicates'
+      responses:
+        '200':
+          description: response
+          content:
+            application/json:
+              x-ov-rules:
+                name : DuplicateResponseValidation
+                rule: |
+                  WENN der name IST UNGLEICH Test
+                  DANN was für ein Quatsch!
+              schema:
+                $ref: '#/components/schemas/WithAllOf'
+  /none:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithNone'
+      responses:
+        '200':
+          description: response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithAllOf'
+components:
+  schemas:
+    WithAllOf:
+      allOf:
+        - $ref: '#/components/schemas/Simple'
+        - type : Object
+          properties:
+            value:
+              type: integer
+              format: int64
+    WithAllOfB:
+      allOf:
+        - $ref: '#/components/schemas/Simple'
+        - $ref: '#/components/schemas/SimpleB'
+    WithOneOf:
+      oneOf:
+        - $ref: '#/components/schemas/Simple'
+        - $ref: '#/components/schemas/SimpleB'
+    WithAnyOf:
+      anyOf:
+        - $ref: '#/components/schemas/Simple'
+        - $ref: '#/components/schemas/SimpleB'
+
+    WithRecursive:
+      anyOf:
+        - $ref: '#/components/schemas/Simple'
+        - $ref: '#/components/schemas/SimpleC'
+    WithNone:
+      not:
+        $ref: '#/components/schemas/Simple'
+    Duplicates:
+      allOf:
+        - $ref: '#/components/schemas/Simple'
+        - type : Object
+          properties:
+            name:
+              type: string
+
+    Simple:
+      properties:
+        name:
+          type: string
+
+    SimpleB:
+      properties:
+        value:
+          type: integer
+          format: int64
+
+    SimpleC:
+      allOf:
+        - $ref: '#/components/schemas/SimpleB'
+        - type : Object
+          properties:
+            art:
+              type: boolean
+x-ov-rules:
+  ReferencedRule:
+    name: OneOfValidation
+    rule: |
+      WENN das value IST GLEICH 123
+      DANN was für ein Quatsch!

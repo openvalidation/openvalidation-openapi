@@ -1,0 +1,35 @@
+trigger:
+- master
+pr: none
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+steps:
+- task: Maven@3
+  inputs:
+    jdkVersionOption: '1.8'
+    publishJUnitResults: true
+    goals: 'clean test'
+- task: DownloadSecureFile@1
+  displayName: 'Download Maven master password'
+  name: mavenSecurity
+  inputs:
+    secureFile: settings-security.xml
+- task: DownloadSecureFile@1
+  displayName: 'Download settings.xml'
+  name: mavenSettings
+  inputs:
+    secureFile: settings.xml
+- task: DownloadSecureFile@1
+  displayName: 'Download pgp key'
+  name: secretKey
+  inputs:
+    secureFile: secret_key.asc
+# Publish jars
+- script: |
+    mv $(mavenSecurity.secureFilePath) ~/.m2
+    mvn clean deploy -Prelease -s $(mavenSettings.secureFilePath) -B -U \
+      -Dpgp.secretkey=keyfile:$(secretKey.secureFilePath) \
+      -Dpgp.passphrase=literal:$(PGP_PASSPHRASE) \
+      -DskipTests=true

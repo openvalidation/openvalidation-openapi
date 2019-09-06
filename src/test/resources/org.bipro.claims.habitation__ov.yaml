@@ -1,0 +1,229 @@
+openapi: 3.0.0
+info:
+  version: 0.0.2
+  title: BiPRO Habitation Claim API
+  description: >-
+    BiPRO Habitation Claim API - BiPRO-Standard für die Übermittlung einer
+    initialen Schadenmeldung für Schäden zu einem Wohngebäude- oder
+    Hausratvertrag.
+
+    Ziele:
+    • Ein Schadenmelder kann über den Service erste rudimentäre Daten zu einem Schaden melden.
+    • Der Empfänger der Schadenmeldung erhält Daten zur Schadenanlage und für ein erstes Schadenmanagement.
+
+    Akteure:
+    • Schadenmelder: Ist die Person, die den Schaden meldet. Dies kann der Versicherungsnehmer des vom Schaden betroffenen Versicherungsvertrages sein oder ein Dritter, z.B. ein Vermittler.
+    • Empfänger der Schadenmeldung: Der Empfänger der Schadenmeldung ist normalerweise der Versicherer, bei dem der Vertrag versichert ist. Der Empfänger kann aber auch ein anderer Provider sein, z.B. ein Assistance-Dienstleister.
+  contact:
+    name: BiPRO e.V.
+    url: https://www.bipro.net
+    email: info@bipro.net
+externalDocs:
+  description: Find more documentation (e.g. business processes) here
+  url: https://bipro.net/normen
+tags:
+  - name: claims
+    description: Meldung eines Schadens
+paths:
+  /claims:
+    post:
+      tags:
+        - claims
+      summary: Übermittelt eine Schadenmeldung zu einem Wohngebäude- oder
+        Hausratvertrag.
+      description: Übermittelt eine Schadenmeldung vom Schadenmelder an den Empfänger der
+        Schadenmeldung.
+      operationId: addClaim
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Claim"
+            x-ov-rules:
+              culture: en
+              rule: |
+                if type equals S100
+                then preferredEmergencyRepairman has to be Harry Tuttle
+        required: true
+      responses:
+        "200":
+          description: Schadenmeldung erfolgreich erhalten.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Claim"
+        "400":
+          description: Schadenmeldung fehlerhaft.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+servers:
+  - url: http://api.bipro.net/v1
+  - url: https://api.bipro.net/v1
+components:
+  schemas:
+    Claim:
+      type: object
+      description: Informationen zum Schadenereignis.
+      required:
+        - description
+        - date
+        - time
+        - type
+        - preferredEmergencyRepairman
+      properties:
+        claimId:
+          type: string
+          description: Die vom Empfänger für die übermittelte Schadenmeldung vergebene
+            Schadennummer muss im Response an den Schadenmelder übermittelt,
+            wenn die Schadenmeldung fehlerfrei empfangen wurde.
+        preferredEmergencyRepairman:
+          type: string
+          description: Mein Lieblingshandwerker
+        date:
+          type: string
+          format: date
+          description: Das Datum, an dem sich der Schaden ereignete.
+        time:
+          type: string
+          description: Die Uhrzeit, zu der sich der Schaden ereignete.
+        description:
+          type: string
+          description: Beschreibung des Schadens.
+        estimated_cost:
+          type: string
+          description: Voraussichtliche Schadenhöhe in Euro.
+        type:
+          type: string
+          description: |-
+            Schadenart mit den Ausprägungen:
+            S080 = Feuer-Schaden
+            S090 = Einbruch-Diebstahl-Schaden
+            S100 = Leitungswasser-Schaden
+            S110 = Glas-Schaden
+            S120 = Sturm-Schaden
+            S299 = sonstiger Schaden
+          enum:
+            - S080
+            - S090
+            - S100
+            - S110
+            - S120
+            - S299
+        persons:
+          type: array
+          items:
+            $ref: "#/components/schemas/Person"
+        contracts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Contract"
+    Person:
+      type: object
+      description: >-
+        Informationen zu einer natürlichen Person.
+
+        Es muss eine Person mit der Rolle Schadenmelder und eine Person mit der Rolle Versicherungsnehmer übermittelt werden.
+      properties:
+        lastname:
+          type: string
+          description: Nachname der Person.
+        firstname:
+          type: string
+          description: Vorname der Person.
+        birthdate:
+          type: string
+          format: date
+          description: Geburtsdatum der Person.
+        email:
+          type: string
+          format: email
+          description: E-Mail-Adresse der Person.
+        roles:
+          type: array
+          description: >-
+            Rolle der Person in dieser Schadenmeldung. Folgende Rollen gibt es:
+
+            Schadenmelder: Person, die den Schaden meldet.
+
+            Versicherungsnehmer: Person, die VN des vom Schaden betroffenen Versicherungsvertrages ist.
+          items:
+            $ref: "#/components/schemas/Role"
+        addresses:
+          type: array
+          items:
+            $ref: "#/components/schemas/Address"
+        phone:
+          $ref: "#/components/schemas/Phone"
+      required:
+        - lastname
+        - firstname
+    Address:
+      type: object
+      description: |-
+        Eine Hausanschrift.
+        Zu jeder Person muss eine Anschrift angegeben werden.
+      properties:
+        street:
+          type: string
+          description: Straßename (ohne Hausnummer).
+        number:
+          type: string
+          description: Hausnummer und Hausnummernergänzung.
+        postal_code:
+          type: string
+          description: Postleitzahl.
+        city:
+          type: string
+          description: Ort.
+        country:
+          type: string
+          description: "Länderkennzeichen aus der Liste der internationalen
+            Kfz-Länderkennzeichen der UNO
+            (http://www.unece.org/fileadmin/DAM/trans/conventn/Distsigns.pdf). "
+      required:
+        - street
+        - number
+        - postal_code
+        - city
+    Phone:
+      type: object
+      description: >-
+        Eine Telefonnummer bestehend aus Ländercode und Telefonanschluss.
+
+        Zur Person mit der Rolle Schadenmelder muss eine Telefonnummer angegeben werden.
+      properties:
+        country_code:
+          type: string
+          description: Der Ländercode der Telefonnummer, im Format
+            E.164  (https://www.itu.int/rec/T-REC-E.164-201011-I) (Länge minimal
+            1, maximal 3).
+          pattern: ^[0-9]{1,3}?$
+        national_number:
+          type: string
+          description: Der Telefonanschluss innerhalb eines Landes ohne führende Null, im
+            Format E.164 (Länge minimal 1, maximal 14).
+          pattern: ^[0-9]{1,14}?$
+    Contract:
+      type: object
+      description: Versicherungsvertrag, zu dem der Schaden gemeldet wird.
+      properties:
+        contractId:
+          type: string
+          description: Versicherungsscheinnummer.
+    Role:
+      type: string
+      enum:
+        - Schadenmelder
+        - Versicherungsnehmer
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        fields:
+          type: string

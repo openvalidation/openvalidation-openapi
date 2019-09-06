@@ -1,0 +1,108 @@
+openapi: "3.0.0"
+info:
+  title: BiPROShowcase
+  version: "1.0.0"
+  description: |
+    Dieses Showcase zeigt die Verwendung von openVALIDATION Rules innerhalb eines OpenAPI Contracts.
+    Die Regelen werden mittels der vendor extension 'x-ov-rules' einem RequestBody hinzugefügt.
+paths:
+  /simple:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MyModel'
+            x-ov-rules:
+              rule: |
+                WENN  der Name ist GLEICH Ilja
+                DANN  was für ein Quatsch!
+
+                      10
+                 ALS  career start
+
+                WENN  career start + power ist GLEICH 301
+                DANN  second plus operator with power in rule works
+      responses:
+        '200':
+          description: successful response
+  /second:
+    post:
+      requestBody:
+        content:
+          application/json:
+            x-ov-rules:
+              rule: |
+                WENN das Alter des Bewerbers KLEINER als 18 Jahre ist
+                DANN mööp!
+            schema:
+              $ref: '#/components/schemas/MyModel'
+      responses:
+        '200':
+          description: successful response
+  /abc:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Name:
+                  type: string
+      responses:
+        '200':
+          description: successful response
+  /abcd:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Name:
+                  type: string
+      responses:
+        '200':
+          description: successful response
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Test:
+                  type: string
+      responses:
+        '200':
+          description: successful response
+components:
+  schemas:
+    MyModel:
+      properties:
+        Name:
+          type: string
+        Alter:
+          type: number
+        Strasse:
+          type: string
+        Ort:
+          type: string
+        Plz:
+          type: string
+        EMail:
+          type: string
+        Telefonnummer:
+          type: string
+        Kuendigungsfrist:
+          type: number
+        Berufserfahrung:
+          type: number
+        Jahresbruttogehalt:
+          type: number
+        Position:
+          type: string
+        power:
+          type: integer

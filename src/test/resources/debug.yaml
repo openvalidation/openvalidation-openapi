@@ -1,0 +1,59 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: BiPRO erweiterte Validierungsregeln
+  license:
+    name: Apache 2.0
+  description: |
+    Enthält erweiterte Validierungsregeln, die direkt innerhalb eines OpenAPI Contracts spezifiziert werden.
+    Regelen werden mittels einer vendor extension 'x-ov-rules' einem RequestBody hinzugefügt.
+    Innerhalb der Regeln kann auf alle Eigenschaften des BodyRequest-Schemas zugegriffen werden.
+servers:
+  - url: http://rnextshowcase.westeurope.azurecontainer.io
+paths:
+  /benutzer:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Versicherungsnehmer'
+            x-ov-rules:
+              rule: |
+                das Alter des Versicherungsnehmers IST KLEINER 18
+                 ALS  MINDERJAEHRIG
+
+                WENN  der Versicherungsnehmer MINDERJAEHRIG IST
+                DANN  Sie müssen Volljährig sein, um diesen Antrag stellen zu können.
+
+                WENN  der Versicherungsnehmer IST NICHT MINDERJAEHRIG
+                 UND  sein Name IST GLEICH Donald
+                DANN  Einen Donald können wir leider nicht versichern.
+
+                WENN  der Versicherungsnehmer IST NICHT MINDERJAEHRIG
+                 UND  Adresse.Ort IST GLEICH München
+                DANN  Münchner können leider nicht versichert werden.
+      responses:
+        '200':
+          description: alles gut!
+components:
+  schemas:
+    Versicherungsnehmer:
+      type: object
+      properties:
+        Name:
+          type: string
+        Alter:
+          type: number
+        Adresse:
+          type: object
+          properties:
+            Ort:
+              type: string
+        Rechnungsadresse:
+          type: object
+          properties:
+            Ort:
+              type: string
+            Strasse:
+              type: string

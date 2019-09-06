@@ -1,0 +1,47 @@
+{{>licenseInfo}}
+
+
+(function(root, factory) {
+        if (typeof define === 'function' && define.amd) {
+            // AMD. Register as an anonymous module.
+            define(['ApiClient'], factory);
+        } else if (typeof module === 'object' && module.exports) {
+            // CommonJS-like environments that support module.exports, like Node.
+            module.exports = factory(require('../ApiClient'));
+        } else {
+            // Browser globals (root is window)
+            if (!root.Sample) {
+            root.Sample = {};
+        }
+            root.Sample.OVRules = factory(root.Sample.ApiClient);
+        }
+    }(this, function(ApiClient) {
+    'use strict';
+
+    var exports = function() {};
+
+    exports.validate = function(operationID, model, callback) {
+
+{{{single_file_code}}}
+
+        var openValidatorFactory = new openValidatorFactory();
+        var validator = openValidatorFactory.create(operationID);
+        var summary = { hasErrors:false,errors:[]};
+
+        if (validator)
+        {
+            summary = validator.validate(model);
+        }
+        else
+        {
+            summary.hasErrors = true;
+            summary.errors.push({error:'could not find validator for operation: ' + operationID});
+        }
+
+        return summary;
+    }
+
+    exports.instance = new exports();
+
+    return exports;
+}));
