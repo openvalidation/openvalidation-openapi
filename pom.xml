@@ -87,6 +87,7 @@
         <openapi-generator-version>3.3.4</openapi-generator-version>
         <maven-plugin-version>1.0.0</maven-plugin-version>
         <openvalidation-version>0.0.1</openvalidation-version>
+        <skipTests>false</skipTests>
     </properties>
 
     <dependencies>
@@ -252,6 +253,23 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <configuration>
+                    <skipTests>${skipTests}</skipTests>
+                    <includes>
+                        <include>**/*Test*</include>
+                        <include>**/*Test</include>
+                        <include>**/Test*</include>
+                        <include>Test*</include>
+                        <include>*Test</include>
+                        <include>*Tests</include>
+                        <include>*TestCase</include>
+                    </includes>
                 </configuration>
             </plugin>
             <plugin>
