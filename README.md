@@ -1,3 +1,9 @@
+[![Build Status](https://dev.azure.com/validaria/openvalidation/_apis/build/status/openVALIDATION%20OpenAPI/openVALIDATION%20OpenAPI%20master?branchName=master)](https://dev.azure.com/validaria/openvalidation/_build/latest?definitionId=3&branchName=master)
+![Azure DevOps tests (compact)](https://img.shields.io/azure-devops/tests/validaria/openvalidation/3?compact_message)
+[![Maven Central](https://img.shields.io/maven-central/v/io.openvalidation/openvalidation-openapi-generator)](https://search.maven.org/search?q=g:io.openvalidation)
+[![Follow us on Twitter](https://img.shields.io/twitter/follow/Validaria_?style=social)](https://twitter.com/validaria_)
+
+
 # OpenAPI Generator for openVALIDATION
 
 This project provides an openapi-generator integration to generate services with validation logic provided by openVALIDATION.
