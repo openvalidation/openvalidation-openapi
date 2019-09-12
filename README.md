@@ -65,14 +65,50 @@ Alternatively, the `openvalidation-openapi-generator` jar itself can be called i
 
 For mac/linux:
 ```
-java -cp /path/to/openapi-generator-cli.jar:/path/to/openvalidation-openapi-generator.jar org.openapitools.codegen.OpenAPIGenerator generate -g my-codegen -i /path/to/openapi.yaml -o ./test
+java -cp /path/to/openapi-generator-cli.jar:/path/to/openvalidation-openapi-generator.jar org.openapitools.codegen.OpenAPIGenerator generate -g ov-java-spring-server -i /path/to/openapi.yaml -o ./test
 ```
 (Do not forget to replace the values `/path/to/openapi-generator-cli.jar`, `/path/to/openvalidation-openapi-generator.jar` and `/path/to/openapi.yaml` in the previous command)
 
 For Windows users, you will need to use `;` instead of `:` in the classpath, e.g.
 ```
-java -cp /path/to/openapi-generator-cli.jar;/path/to/openvalidation-openapi-generator.jar org.openapitools.codegen.OpenAPIGenerator generate -g my-codegen -i /path/to/openapi.yaml -o ./test
+java -cp /path/to/openapi-generator-cli.jar;/path/to/openvalidation-openapi-generator.jar org.openapitools.codegen.OpenAPIGenerator generate -g ov-java-spring-server -i /path/to/openapi.yaml -o ./test
 ```
+
+Or use openVALIDATION Generator as Maven Plugin:
+```
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>3.3.4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/my.spec.yaml</inputSpec>
+                            <generatorName>ov-java-rules</generatorName> <!- rules only generation -->
+                            <configOptions>
+                                <invokerPackage>my.custom.package</invokerPackage>
+                                <modelPackage>my.custom.package.model</modelPackage>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.openvalidation</groupId>
+                        <artifactId>openvalidation-openapi-generator</artifactId>
+                        <version>0.0.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+```
+
 
 ## Getting involved
 
