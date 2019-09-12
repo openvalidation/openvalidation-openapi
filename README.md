@@ -75,7 +75,7 @@ java -cp /path/to/openapi-generator-cli.jar;/path/to/openvalidation-openapi-gene
 ```
 
 Or use openVALIDATION Generator as Maven Plugin:
-```
+```xml
     <build>
         <plugins>
             <plugin>
