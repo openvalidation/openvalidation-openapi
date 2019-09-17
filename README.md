@@ -27,8 +27,8 @@ Check out [openVALIDATION](https://github.com/openvalidation/openvalidation) to 
 
 ## How do I use this?
 
-Download the [openVALIDATION OpenAPI generator CLI](https://repo1.maven.org/maven2/io/openvalidation/openvalidation-openapi-generator/0.0.1/openvalidation-openapi-generator-0.0.1-cli.jar) (requires the Java SE 8 runtime environment).
-Use `openvalidation-openapi-generator-0.0.1-cli.jar` as a drop-in replacement for the `openapi-generator-cli.jar`
+Download the [openVALIDATION OpenAPI generator CLI](https://downloadarchive.blob.core.windows.net/openvalidation-openapi-generator/ov-openapi-generator-cli.jar) (requires the Java SE 8 runtime environment).
+Use `ov-openapi-generator-cli.jar` as a drop-in replacement for the `openapi-generator-cli.jar`
 
 Now you can use openVALIDATION rules in your service contract:
 ```yaml
