@@ -116,4 +116,4 @@ Please refer to our [contribution guidelines](CONTRIBUTING.md).
 
 ## Contact
 
-You can write an [E-Mail](mailto:validaria@openvalidation.io) or mention our twitter account [@Validaria_](https://twitter.com/validaria_).
+You can write an [E-Mail](mailto:validaria@openvalidation.io) or mention our twitter account [@openVALIDATION](https://twitter.com/openvalidation).
